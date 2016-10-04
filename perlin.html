@@ -17,6 +17,11 @@
     var renderer;
     var scene;
     var camera;
+    var depth = 100;
+    var width = 80;
+    var height = 80;
+    var spacingX = 10;
+    var spacingZ = 10;
 
     /**
      * Initializes the scene, camera and objects. Called when the window is
@@ -26,6 +31,50 @@
 
         // create a scene, that will hold all our elements such as objects, cameras and lights.
         scene = new THREE.Scene();
+
+	var geometry = new THREE.Geometry();
+	for (var z = 0 ; z < depth ; z++) {
+		for (var x = 0 ; x < width ; x ++) {
+			var vertex = new THREE.Vector3(x*spacingX, Math.random()*height, z*spacingZ);
+			geometry.vertices.push(vertex);
+		}
+	
+	}
+
+	for (var z = 0 ; z < depth-1 ; z++) {
+		for (var x = 0 ; x < width - 1 ; x++) {
+			var a = x + z*width;
+			var b = (x+1) + (z * width);
+			var c = x + ((z+1) * width);
+			var d = (x+1) + ((z+1) * width);
+
+			var face1 = new THREE.Face3(b, a, c);
+			var face2 = new THREE.Face3(c, d, b);
+			
+			face1.color = new THREE.Color(scale(getHightPoint(geometry, face1)).hex());
+			face2.color = new THREE.Color(scale(getHightPoint(geometry, face2)).hex());
+			
+			geometry.faces.push(face1);
+			geometry.faces.push(face2);
+
+		}
+	}
+
+	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
         // create a camera, which defines where we're looking at.
         camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000);
